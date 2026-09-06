@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 
 const navItems = [
   { label: "Inicio", href: "#inicio" },
-  { label: "Servicios", href: "#servicios" },
+  { label: "Ecosistema", href: "#ecosistema" },
   { label: "Soluciones", href: "#soluciones" },
   { label: "Contacto", href: "#contacto" },
 ];
@@ -64,6 +64,13 @@ const services = [
   },
 ];
 
+const methodSteps = [
+  ["01", "Entendemos", "Identificamos el problema y comprendemos cómo funciona actualmente el negocio."],
+  ["02", "Diseñamos", "Definimos el sistema adecuado para resolver el problema."],
+  ["03", "Implementamos", "Construimos e integramos la solución."],
+  ["04", "Evolucionamos", "Mantenemos, mejoramos y ampliamos el sistema conforme evoluciona el negocio."],
+];
+
 const whatsappUrl = "https://wa.me/5492922432839?text=Hola%20Jystem%2C%20quiero%20analizar%20mi%20negocio";
 
 export default function Home() {
@@ -86,6 +93,18 @@ export default function Home() {
         const isActive = href === `#${id}`;
         link.classList.toggle(styles.menuActive, isActive);
       });
+
+      const activeLink = document.querySelector(`.${styles.navList} a[href="#${id}"]`) as HTMLElement | null;
+      const navList = document.querySelector(`.${styles.navList}`) as HTMLElement | null;
+      if (activeLink && navList) {
+        const linkRect = activeLink.getBoundingClientRect();
+        const navRect = navList.getBoundingClientRect();
+        navList.style.setProperty("--bubble-x", `${linkRect.left - navRect.left}px`);
+        navList.style.setProperty("--bubble-y", `${linkRect.top - navRect.top}px`);
+        navList.style.setProperty("--bubble-width", `${linkRect.width}px`);
+        navList.style.setProperty("--bubble-height", `${linkRect.height}px`);
+        navList.style.setProperty("--bubble-opacity", "1");
+      }
     };
 
     const observer = new IntersectionObserver(
@@ -102,7 +121,17 @@ export default function Home() {
     sections.forEach((section) => observer.observe(section));
     setActive("inicio");
 
-    return () => observer.disconnect();
+    const handleResize = () => {
+      const currentLink = document.querySelector(`.${styles.navList} a.${styles.menuActive}`) as HTMLAnchorElement | null;
+      const currentId = currentLink?.getAttribute("href")?.replace("#", "") || "inicio";
+      setActive(currentId);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   useEffect(() => {
@@ -278,10 +307,32 @@ export default function Home() {
         </div>
       </section>
 
-      <section className={styles.servicesSection} id="servicios">
+      <section className={styles.transformationSection} id="transformacion">
+        <div className={styles.container}>
+          <div className={styles.transformationContent}>
+            <p className={styles.eyebrow}>Transformación</p>
+            <h2>
+              Un negocio puede funcionar mediante esfuerzo
+              <span>Una empresa necesita sistemas</span>
+            </h2>
+            <p>
+              Jystem convierte problemas operativos en sistemas claros para que el crecimiento no dependa de hacerlo todo a fuerza de voluntad
+            </p>
+          </div>
+          <div className={styles.transformationSignal} aria-hidden="true">
+            <span>ESFUERZO</span>
+            <i />
+            <span>SISTEMA</span>
+            <i />
+            <span>EMPRESA</span>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.servicesSection} id="ecosistema">
         <div className={styles.container}>
           <div className={styles.sectionHeader}>
-            <p className={styles.eyebrow}>Servicios</p>
+            <p className={styles.eyebrow}>Ecosistema</p>
             <h2>
               Tres formas de <span>hacer crecer tu sistema</span>
             </h2>
@@ -299,6 +350,15 @@ export default function Home() {
                 <img src={service.logo} alt="" className={styles.serviceLogo} />
                 <h3>{service.name}</h3>
                 <p>{service.description}</p>
+                {service.name === "Studio" ? (
+                  <a className={styles.serviceButton} href="https://studio.jystem.com" target="_blank" rel="noreferrer">
+                    Conocer Studio
+                  </a>
+                ) : (
+                  <button className={styles.serviceButtonDisabled} type="button" disabled>
+                    Conocer {service.name}
+                  </button>
+                )}
               </article>
             ))}
           </div>
@@ -343,6 +403,28 @@ export default function Home() {
         </div>
       </section>
 
+      <section className={styles.methodSection} id="metodo">
+        <div className={styles.container}>
+          <div className={styles.sectionHeader}>
+            <p className={styles.eyebrow}>Nuestro Método</p>
+            <h2>
+              No mostramos solo lo que hacemos
+              <span>Tenemos un método para transformar tu operación</span>
+            </h2>
+          </div>
+
+          <div className={styles.methodGrid}>
+            {methodSteps.map(([number, title, description]) => (
+              <article key={number} className={styles.methodCard}>
+                <span className={styles.methodNumber}>{number}</span>
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className={styles.ctaSection} id="contacto">
         <div className={styles.container}>
           <div className={styles.ctaCard}>
@@ -371,7 +453,7 @@ export default function Home() {
             <div className={styles.footerColumn}>
               <h3>Explorar</h3>
               <a href="#inicio">Inicio</a>
-              <a href="#servicios">Servicios</a>
+              <a href="#ecosistema">Ecosistema</a>
               <a href="#soluciones">Soluciones</a>
             </div>
 

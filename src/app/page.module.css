@@ -1675,6 +1675,14 @@
     gap: 0;
   }
 
+  .mainNav .navList::before {
+    display: none;
+  }
+
+  .mainNav .navList li + li {
+    border-top: 1px solid rgba(138, 147, 166, 0.18);
+  }
+
   .mainNav .navList a {
     display: block;
     padding: 0.85rem 0.25rem;
@@ -1686,7 +1694,8 @@
     grid-row: 1;
   }
 
-  .headerCta {
+  .siteHeader .headerCta {
+    display: inline-flex;
     grid-column: 3;
     grid-row: 1;
   }

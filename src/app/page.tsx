@@ -351,7 +351,7 @@ export default function Home() {
                 <h3>{service.name}</h3>
                 <p>{service.description}</p>
                 {service.name === "Studio" ? (
-                  <a className={styles.serviceButton} href="https://studio.jystem.com" target="_blank" rel="noreferrer">
+                  <a className={styles.serviceButton} href="https://studio.jystem.com">
                     Conocer Studio
                   </a>
                 ) : (
